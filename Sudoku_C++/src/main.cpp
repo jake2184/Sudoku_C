@@ -12,7 +12,7 @@ int main() {
 	Puzzle puzzle = Puzzle();
 
 
-	puzzle.loadFromFile("C:/Users/Jake/source/repos/Sudoku_C++/Sudoku_C++/src/puzzles/hard");
+	puzzle.loadFromFile("C:/Users/Jake/source/repos/Sudoku_C++/Sudoku_C++/src/puzzles/4x4");
 	
 	cout << "\n\n";
 	puzzle.printGrid();
@@ -23,7 +23,7 @@ int main() {
 		cout << "Solved! \n" << endl;
 	}
 
-	puzzle.printGrid();
+	//puzzle.printGrid();
 	
 	return 0;
 }

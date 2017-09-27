@@ -23,6 +23,10 @@ class Puzzle {
 
 	private:
 		int BASE_SIZE = 0;
+		int base2;
+		int base3;
+		int base4;
+
 		vector<vector<int>> grid;
 		ColumnNode* headNode;
 

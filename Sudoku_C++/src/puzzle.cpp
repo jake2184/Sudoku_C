@@ -99,6 +99,12 @@ void Puzzle::loadFromFile(string filename) {
 		cerr << "Cannot open input file " + filename << endl;
 		exit(1);
 	}
+
+	// Generate consts
+
+	base2 = int(pow(BASE_SIZE, 2));
+	base3 = int(pow(BASE_SIZE, 3));
+	base4 = int(pow(BASE_SIZE, 4));
 }
 
 
@@ -194,6 +200,20 @@ bool Puzzle::recursiveBacktracking(Cell cell) {
 	}
 }
 
+ColumnNode* getColumnById(ColumnNode* headNode, int id) {
+	ColumnNode* currentNode = headNode->right;
+	for (int i = 0; i < id; i++) {
+		currentNode = currentNode->right;
+	}
+	return currentNode;
+}
+Node* getChildByDepth(ColumnNode* columnNode, int id) {
+	Node* currentNode = columnNode->down;
+	for (int i = 0; i < id; i++) {
+		currentNode = currentNode->down;
+	}
+	return currentNode;
+}
 
 void Puzzle::buildMatrix() {
 	// Create head nodes
@@ -227,6 +247,58 @@ void Puzzle::buildMatrix() {
 		currentNode->up = currentChild;
 
 		currentNode = currentNode->right;
+	}
+
+	// Link children //
+
+	// Second sector
+	currentNode = getColumnById(headNode, 1*base4);
+	cout << currentNode->id << endl;
+	for (int i = 0; i < base4; i++) {
+		int child = i % base2;
+		int id = (i / base2) * base2;
+		Node* currentChild = currentNode->down;
+		for (int j = 0; j < base2; j++){	
+			ColumnNode* columnToLinkTo = getColumnById(headNode, id+j);
+			Node* childToLinkTo = getChildByDepth(columnToLinkTo, child);
+			currentChild->left = childToLinkTo;
+			childToLinkTo->right = currentChild;
+
+			//cout << "Linking: " << columnToLinkTo->id << ":" << child << "  ->  " << i+base4 << ":" << j << "  ->  ";
+
+			columnToLinkTo = getColumnById(headNode, (2*base4) + (i%base2) + (j*base2));
+			childToLinkTo = getChildByDepth(columnToLinkTo, i/base3);
+			currentChild->right = childToLinkTo;
+			childToLinkTo->left = currentChild;
+
+			//cout << columnToLinkTo->id << ":" << i/base3 << endl;
+
+			
+		}
+	}
+
+	// Fourth Sector
+	currentNode = getColumnById(headNode, 3*base4);
+	for (int i = 0; i < base4; i++) {
+		Node* currentChild = currentNode->down;
+
+		int id = 2*base4 + (i%base2) + (i / base2*base3);
+		for (int j = 0; j < base2; j++) {
+			ColumnNode* columnToLinkTo = getColumnById(headNode, id + (j*base2));
+			int child = (j%BASE_SIZE) + (i / base3)*BASE_SIZE;
+			Node* childToLinkTo = getChildByDepth(columnToLinkTo, child);
+			currentChild->left = childToLinkTo;
+			childToLinkTo->right = currentChild;
+
+			cout << "Linking: " << columnToLinkTo->id << ":" << child << "  ->  " << i + 3*base4 << ":" << j << "  ->  ";
+
+			columnToLinkTo = getColumnById(headNode, (i%base2) + (j*base2));
+			childToLinkTo = getChildByDepth(columnToLinkTo, i/base4);
+			currentChild->right = childToLinkTo;
+			childToLinkTo->left = currentChild;
+
+			cout << columnToLinkTo->id << ":" << i/base4 << endl;
+		}
 	}
 
 }
