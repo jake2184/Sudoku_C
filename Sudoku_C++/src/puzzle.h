@@ -1,6 +1,7 @@
 
 #include <string>
 #include <vector>
+#include "node.h"
 using namespace std;
 
 struct Cell {
@@ -23,6 +24,7 @@ class Puzzle {
 	private:
 		int BASE_SIZE = 0;
 		vector<vector<int>> grid;
+		ColumnNode* headNode;
 
 
 		bool checkCell(int row, int column);
@@ -30,6 +32,8 @@ class Puzzle {
 		bool checkCellColumn(int column, int index);
 		bool checkCellBlock(int row, int column);
 		bool checkGrid();
+
+		void buildMatrix();
 
 		bool recursiveBacktracking(Cell cell);
 };

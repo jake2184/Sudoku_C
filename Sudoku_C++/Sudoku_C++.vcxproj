@@ -20,10 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\node.cpp" />
     <ClCompile Include="src\puzzle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h" />
+    <ClInclude Include="src\node.h" />
     <ClInclude Include="src\puzzle.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

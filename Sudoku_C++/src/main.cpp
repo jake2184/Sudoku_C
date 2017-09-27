@@ -1,5 +1,6 @@
 #include "puzzle.h"
 #include "main.h"
+#include "node.h"
 #include <iostream>
 
 using namespace std;
@@ -11,7 +12,7 @@ int main() {
 	Puzzle puzzle = Puzzle();
 
 
-	puzzle.loadFromFile("C:/Users/Jake/source/repos/Sudoku_C++/Sudoku_C++/src/sudoku.txt");
+	puzzle.loadFromFile("C:/Users/Jake/source/repos/Sudoku_C++/Sudoku_C++/src/puzzles/hard");
 	
 	cout << "\n\n";
 	puzzle.printGrid();

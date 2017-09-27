@@ -1,5 +1,6 @@
 #include "puzzle.h"
 
+
 #include <iostream>
 #include <fstream>
 #include <math.h>
@@ -7,12 +8,32 @@
 
 Puzzle::Puzzle()
 {
+	headNode = new ColumnNode();
 }
-
 
 Puzzle::~Puzzle()
 {
+	ColumnNode* nextNode = headNode->right;
+	ColumnNode* currentNode;
+
+	while (nextNode != headNode) {
+		// Delete each column
+		currentNode = nextNode;
+		nextNode = currentNode->right;
+		// Go down 
+		Node* nextRow = currentNode->down;
+		Node* currentRow = currentNode->down;
+		while (nextRow != currentNode) {
+			nextRow = currentRow->down;
+			delete currentRow;
+			currentRow = nextRow;
+		}
+		
+		delete currentNode;
+	}
+	delete headNode;
 }
+
 
 void Puzzle::printGrid() {
 	for (int i = 0; i < grid.size(); i++) {
@@ -173,11 +194,51 @@ bool Puzzle::recursiveBacktracking(Cell cell) {
 	}
 }
 
+
+void Puzzle::buildMatrix() {
+	// Create head nodes
+	ColumnNode* currentNode = headNode;
+	ColumnNode* previousNode = headNode;
+	for (int i = 0; i < pow(BASE_SIZE, 6); i++) {
+		currentNode->id = i-1;
+		currentNode->right = new ColumnNode();
+		currentNode->left = previousNode;
+		previousNode = currentNode;
+		currentNode = currentNode->right;
+	}
+	currentNode->right = headNode;
+	headNode->left = currentNode;
+
+	// Create columns
+	currentNode = headNode->right;
+	while (currentNode != headNode) {
+		// Create BASE_SIZE*BASE_SIZE children
+		Node* previousChild = currentNode;
+		Node* currentChild = new Node();
+		currentNode->down = currentChild;
+		for (int i = 0; i < BASE_SIZE*BASE_SIZE; i++) {
+			currentChild->up = previousChild;
+			currentChild->down = new Node();
+			previousChild = currentChild;
+			currentChild = currentChild->down;
+		}
+		currentChild->up = previousChild;
+		currentChild->down = currentNode;
+		currentNode->up = currentChild;
+
+		currentNode = currentNode->right;
+	}
+
+}
+
+
 bool Puzzle::solve() {
 	// Verify grid is established
 	if (!checkGrid()) {
 		return 1;
 	};
+	// Alternative solve
+	buildMatrix();
 
 	// Solve
 	Cell startCell = Cell(0,0);
